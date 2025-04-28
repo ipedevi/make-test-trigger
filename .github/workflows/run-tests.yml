@@ -15,13 +15,26 @@ jobs:
       - name: Parse and Print Gherkin
         run: |
           echo "EJECUTANDO LA PRUEBA:"
-          echo "${{ github.event.inputs.mensaje }}" > payload.json
-          FEATURE=$(jq -r '.feature' payload.json)
-          SCENARIO=$(jq -r '.scenario' payload.json)
+          echo '${{ github.event.inputs.mensaje }}' > payload.json
+
+          if [ ! -s payload.json ]; then
+            echo "ERROR: JSON vacío o inválido"
+            exit 1
+          fi
+
+          FEATURE=$(jq -r '.feature // empty' payload.json)
+          SCENARIO=$(jq -r '.scenario // empty' payload.json)
+
+          if [ -z "$FEATURE" ] || [ -z "$SCENARIO" ]; then
+            echo "ERROR: Faltan datos en el JSON"
+            exit 1
+          fi
+
           echo ""
           echo "Feature: $FEATURE"
           echo ""
           echo "  Scenario: $SCENARIO"
-          jq -r '.steps[] | "    \(. )"' payload.json
+
+          jq -r '.steps[]? | select(. != null) | "    \(. )"' payload.json
       - name: Say End
         run: echo "PRUEBAS ACABADAS!!"
