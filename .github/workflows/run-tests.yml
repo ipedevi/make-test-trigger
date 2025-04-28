@@ -2,7 +2,7 @@ name: Run Tests
 
 on:
   workflow_dispatch:  # Esto permite ejecutarlo manualmente o vía API
-      inputs:
+    inputs:
       mensaje:
         description: 'Mensaje de prueba'
         required: true
