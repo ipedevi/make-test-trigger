@@ -2,12 +2,17 @@ name: Run Tests
 
 on:
   workflow_dispatch:  # Esto permite ejecutarlo manualmente o vía API
+      inputs:
+      mensaje:
+        description: 'Mensaje de prueba'
+        required: true
+        default: 'TESTEANDO...'
 
 jobs:
   simple-test:
     runs-on: ubuntu-latest
     steps:
       - name: Say Start
-        run: echo "TESTEANDO..."
+        run: echo "${{ github.event.inputs.mensaje }}"
       - name: Say End
         run: echo "PRUEBAS ACABADAS!!"
