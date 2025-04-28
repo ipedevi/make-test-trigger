@@ -4,15 +4,24 @@ on:
   workflow_dispatch:  # Esto permite ejecutarlo manualmente o vía API
     inputs:
       mensaje:
-        description: 'Mensaje de prueba'
+        description: 'Mensaje en formato JSON'
         required: true
-        default: 'TESTEANDO...'
+        default: '{}'
 
 jobs:
   simple-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Say Start
-        run: echo "${{ github.event.inputs.mensaje }}"
+      - name: Parse and Print Gherkin
+        run: |
+          echo "EJECUTANDO LA PRUEBA:"
+          echo "${{ github.event.inputs.mensaje }}" > payload.json
+          FEATURE=$(jq -r '.feature' payload.json)
+          SCENARIO=$(jq -r '.scenario' payload.json)
+          echo ""
+          echo "Feature: $FEATURE"
+          echo ""
+          echo "  Scenario: $SCENARIO"
+          jq -r '.steps[] | "    \(. )"' payload.json
       - name: Say End
         run: echo "PRUEBAS ACABADAS!!"
