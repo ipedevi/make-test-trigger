@@ -1,0 +1,13 @@
+name: Run Tests
+
+on:
+  workflow_dispatch:  # Esto permite ejecutarlo manualmente o vía API
+
+jobs:
+  simple-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Start
+        run: echo "TESTEANDO..."
+      - name: Say End
+        run: echo "PRUEBAS ACABADAS!!"
